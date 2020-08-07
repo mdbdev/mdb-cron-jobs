@@ -3,7 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const Discord = require('discord.js');
 const app = express()
-const port = 3000
+const port = 5000
 
 app.get('/postIdea', (req, res) => {
     var Airtable = require('airtable');
