@@ -40,6 +40,6 @@ app.get('/postIdea', (req, res) => {
     });
 })
 
-app.listen(port, () => {
+app.listen(process.env.PORT || 5000, () => {
   console.log(`Listening for scheduling tasks at http://localhost:${port}`)
 })
