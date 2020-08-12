@@ -15,7 +15,7 @@ app.get('/postIdea', (req, res) => {
         records.forEach(function(record) {
             var idea = record.get('Idea');
             var tagline = record.get('Tagline');
-            var content = '> *' + tagline + '*\n' + '> ' + idea;
+            var content = '>*' + tagline + '*\n' + '>' + idea;
 
             const webhook = process.env.SLACK_WEBHOOK_URL;
 
