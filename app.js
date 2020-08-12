@@ -1,14 +1,13 @@
 require('dotenv').config()
 
+const request = require('request');
 const express = require('express')
-const Discord = require('discord.js');
 const app = express()
 const port = 5000
 
 app.get('/postIdea', (req, res) => {
     var Airtable = require('airtable');
     var base = new Airtable({apiKey: process.env.AIRTABLE_AUTH_KEY}).base('appK9gYuFThtDMzPz');
-    const webhookClient = new Discord.WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN);
     base('Ideas').select({
         maxRecords: 10,
         view: "New Ideas"
@@ -16,8 +15,25 @@ app.get('/postIdea', (req, res) => {
         records.forEach(function(record) {
             var idea = record.get('Idea');
             var tagline = record.get('Tagline');
-            var content = '> Tagline: ' + tagline + '\n' + '> Idea: ' + idea;
-            webhookClient.send(content);
+            var content = '> *' + tagline + '*\n' + '> ' + idea;
+
+            const webhook = process.env.SLACK_WEBHOOK_URL;
+
+            request({
+                url: webhook,
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: content
+                })
+            }, (error, response, body) => {
+                console.log('Done.')
+            })
+
+            
+
             base('Ideas').update([{
                 "id": record.getId(),
                 "fields": {
